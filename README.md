@@ -13,6 +13,7 @@ Planned Architecture
         - Container 1: Django REST API served using Gunicorn
         - Container 2: NGINX
         - Container 3: Development postgres database
+        - Container 4: Development react app
 
     RDS
         - Production postgres database
