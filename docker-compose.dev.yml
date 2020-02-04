@@ -30,12 +30,18 @@ services:
     depends_on:
       - api
 
-        #  frontend:
-        #build:
-        #context: ./frontend
-        #dockerfile: Dockerfile.dev
-        #ports:
-        #- 3000:3000
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+      - db
+      - nginx
 
 volumes:
   postgres_data:
