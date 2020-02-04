@@ -14,7 +14,19 @@ services:
     build: ./nginx
     volumes:
       - ./api/static:/static
+      - frontend_data:/frontend
     ports:
       - 80:80
     depends_on:
       - api
+      - frontend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    volumes:
+      - frontend_data:/app/build
+
+volumes:
+  frontend_data:
