@@ -11,10 +11,11 @@ services:
       - ./.env.prod
 
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
     volumes:
       - ./api/static:/static
-      - frontend_data:/frontend
     ports:
       - 80:80
     depends_on:
@@ -25,8 +26,5 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    volumes:
-      - frontend_data:/app/build
-
-volumes:
-  frontend_data:
+    expose:
+      - 80

@@ -22,7 +22,9 @@ services:
       - ./.env.dev
 
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
     volumes:
       - ./api/static:/static
     ports:
@@ -40,10 +42,6 @@ services:
       - 3000:3000
     env_file:
       - ./.env.dev
-    depends_on:
-      - api
-      - db
-      - nginx
 
 volumes:
   postgres_data:
