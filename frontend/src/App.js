@@ -29,23 +29,10 @@ const App = () => {
       });
   }
 
-  const onClickPost = () => {
-    console.log('POST Listings')
-    let server = getServer();
-    fetch(server + '/api/letters')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setLetters(data.map((ltr, index) => {
-          return <Letter letter={ltr} key={index}/>
-        }));
-      });
-  }
-
   return (
     <div>
+      <Form server={getServer() + "/api/letters/"} />
       <button type="button" onClick={onClickGet}>Send GET request</button>
-      <button type="button" onClick={onClickPost}>Send POST request (form not yet implemented)</button>
       <div id="letter-previews">{letters}</div>
     </div>
   );
