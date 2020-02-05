@@ -19,7 +19,7 @@ Planned Architecture
         - Production postgres database
     
     S3
-        - React app
+        - Production react app
 
 Other Plans
 
