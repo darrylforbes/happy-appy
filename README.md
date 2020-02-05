@@ -21,6 +21,6 @@ Planned Architecture
     S3
         - React app
 
-Notes
+Other Plans
 
-    Don't forget to run collectstatic and migrate
+    Create CI/CD pipeline
