@@ -1,24 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
+import Letter from './Letter';
+import Form from './Form';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [letters, setLetters] = useState();
+
+  const getServer = () => {
+    if (process.env.NODE_ENV === 'production') {
+        return 'http://openwhen.darrylforbes.me';
+    }
+    else {
+        return 'http://127.0.0.1';
+    }
+  }
+
+  const onClickGet = () => {
+    console.log('GET Listings');
+    let server = getServer();
+    fetch(server + '/api/letters/')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setLetters(data.map((ltr, index) => {
+          return <Letter letter={ltr} key={index}/>
+        }));
+      });
+  }
+
+  const onClickPost = () => {
+    console.log('POST Listings')
+    let server = getServer();
+    fetch(server + '/api/letters')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setLetters(data.map((ltr, index) => {
+          return <Letter letter={ltr} key={index}/>
+        }));
+      });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button type="button" onClick={onClickGet}>Send GET request</button>
+      <button type="button" onClick={onClickPost}>Send POST request (form not yet implemented)</button>
+      <div id="letter-previews">{letters}</div>
     </div>
   );
 }
