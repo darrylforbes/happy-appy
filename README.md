@@ -17,10 +17,14 @@ Planned Architecture
 
     RDS
         - Production postgres database
-    
+
     S3
         - Production react app
 
 Other Plans
 
     Create CI/CD pipeline
+
+    Possibly replace NGINX with Traefik once static files are relocated too S3
+
+    Enable HTTPS with LetsEncrypt (possibly switch to Traefik for built in SSL)
