@@ -12,7 +12,7 @@ const Form = (props) => {
     console.log(props.server);
     console.log(formData);
 
-    fetch('http://127.0.0.1/api/letters/', {
+    fetch('http://127.0.0.1/api/reflections/', {
       method: 'POST',
       body: formData,
     })
@@ -50,4 +50,3 @@ const Form = (props) => {
 }
 
 export default Form;
-

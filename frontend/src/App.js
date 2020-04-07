@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
-import Letter from './Letter';
+import Reflection from './Reflection';
 import Form from './Form';
 import './App.css';
 
 const App = () => {
-  const [letters, setLetters] = useState();
+  const [reflections, setReflections] = useState();
 
   const getServer = () => {
     if (process.env.NODE_ENV === 'production') {
@@ -19,21 +19,21 @@ const App = () => {
   const onClickGet = () => {
     console.log('GET Listings');
     let server = getServer();
-    fetch(server + '/api/letters/')
+    fetch(server + '/api/reflections/')
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setLetters(data.map((ltr, index) => {
-          return <Letter letter={ltr} key={index}/>
+        setReflections(data.map((ltr, index) => {
+          return <Reflection reflection={ltr} key={index}/>
         }));
       });
   }
 
   return (
     <div>
-      <Form server={getServer() + "/api/letters/"} />
+      <Form server={getServer() + "/api/reflections/"} />
       <button type="button" onClick={onClickGet}>Send GET request</button>
-      <div id="letter-previews">{letters}</div>
+      <div id="reflection-previews">{reflections}</div>
     </div>
   );
 }
