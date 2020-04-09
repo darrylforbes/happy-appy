@@ -5,6 +5,8 @@ from .models import Reflection
 class ReflectionSerializer(serializers.ModelSerializer):
     """Serializer to map the Reflection instance into JSON format."""
 
+    author = serializers.ReadOnlyField(source="author.username")
+
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
 

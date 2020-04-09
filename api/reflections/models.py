@@ -1,8 +1,12 @@
 from django.db import models
 
+
 class Reflection(models.Model):
     """This class represents the Reflection model."""
-    author = models.CharField(max_length=255, blank=False)
+
+    author = models.ForeignKey(
+        "auth.User", related_name="reflections", on_delete=models.CASCADE
+    )
     content = models.TextField(null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     recipient = models.CharField(max_length=255, blank=False)
