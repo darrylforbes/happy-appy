@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Form.css';
+import './form.css';
 
 const Form = (props) => {
   const [values, setValues] = useState({ title: '', author: '', recipient: '', content: '' })

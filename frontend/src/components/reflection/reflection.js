@@ -1,5 +1,5 @@
 import React from 'react';
-import './Reflection.css';
+import './reflection.css';
 
 const Reflection = (props) => {
   const clickListing = (event) => {

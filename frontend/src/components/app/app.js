@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
-import Reflection from './Reflection';
-import Form from './Form';
-import './App.css';
+import logo from '../../logo.svg';
+import Reflection from '../reflection/reflection';
+import Form from '../form/form';
+import './app.css';
 
 const App = () => {
   const [reflections, setReflections] = useState();
