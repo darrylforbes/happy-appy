@@ -128,12 +128,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # For django-cors-headers
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://localhost",
+    "https://openwhen.darrylforbes.me"
+]
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Django Rest Framework settings
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-    ]
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
 }
