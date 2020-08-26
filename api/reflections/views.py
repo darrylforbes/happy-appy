@@ -10,9 +10,15 @@ class ReflectionViewSet(viewsets.ModelViewSet):
     queryset = Reflection.objects.all().order_by("author")
     serializer_class = ReflectionSerializer
 
+    def get_queryset(self):
+        if self.action == 'list':
+            return self.queryset.filter(author=self.request.user)
+        return self.queryset
+
     def get_permissions(self):
         if self.action == "list":
-            permission_classes = [permissions.IsAdminUser]
+            # permission_classes = [permissions.IsAdminUser]
+            permission_classes = [IsUser]
         else:
             permission_classes = [IsUser]
         return [permission() for permission in permission_classes]
