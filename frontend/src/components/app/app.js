@@ -21,7 +21,7 @@ const App = () => {
 
   const getServer = () => {
     if (process.env.NODE_ENV === 'production') {
-        return 'http://openwhen.darrylforbes.me';
+        return 'https://openwhen.darrylforbes.me';
     }
     else {
         return 'http://127.0.0.1';
