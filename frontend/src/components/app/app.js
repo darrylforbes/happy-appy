@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import logo from '../../logo.svg';
 import Reflection from '../reflection/reflection';
 import Form from '../form/form';
+import Login from '../login/login';
 import './app.css';
 
 const App = () => {
@@ -29,9 +30,8 @@ const App = () => {
   }
 
   const onClickGet = () => {
-    console.log('GET Listings');
     let server = getServer();
-    fetch(server + '/api/users/6', {
+    fetch(server + '/api/reflections/', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${JWT}`
@@ -39,51 +39,22 @@ const App = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.reflections);
-        for (let index of data.reflections) {
-          console.log(index)
-          fetch(server + `/api/reflections/${index}/`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${JWT}`
-            },
-            redirect: 'follow'
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data)
-            })
-        }
-        // setReflections(data.map((ltr, index) => {
-        //   return <Reflection reflection={ltr} key={index}/>
-        // }));
+        for (let index of data) {
+          setReflections(data.map((ltr, index) => {
+            return <Reflection reflection={ltr} key={index} />
+          }));
+        };
       })
       .catch((error) => {
         console.log(error)
       });
   }
 
-  const getJWT = () => {
-    let server = getServer();
-    fetch(server + '/api/token/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({'username': 'test3', 'password': 'testuser'})
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setJWT(data.access)
-        document.cookie = `token=${data.access}`
-      });
-  }
-
   return (
     <div>
+      <Login server={getServer() + "/api/token/"} setToken={setJWT} />
       <Form server={getServer() + "/api/reflections/"} />
       <button type="button" onClick={onClickGet}>Send GET request</button>
-      <button type="button" onClick={getJWT}>Get JWT</button>
       <div id="reflection-previews">{reflections}</div>
     </div>
   );
