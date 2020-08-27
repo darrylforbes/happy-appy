@@ -87,7 +87,7 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_DB"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": "db",
+        "HOST": os.environ.get("POSTGRES_HOST"),
         "PORT": 5432,
     }
 }
@@ -142,4 +142,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
+#    ),
+#    "DEFAULT_RENDERER_CLASSES": (
+#        "rest_framework.renderers.JSONRenderer",
+#    )
 }

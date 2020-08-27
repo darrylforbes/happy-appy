@@ -24,10 +24,21 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile.prod
+    environment:
+      - VIRTUAL_HOST=openwhen.darrylforbes.me
+      - LETSENCRYPT_HOST=openwhen.darrylforbes.me
     volumes:
       - ./api/static:/static
-    ports:
-      - 80:80
+    networks:
+      - default
+      - nginx-network
+    expose:
+      - 80
     depends_on:
       - api
       - frontend
+
+networks:
+  nginx-network:
+    external:
+      name: nginx-network
