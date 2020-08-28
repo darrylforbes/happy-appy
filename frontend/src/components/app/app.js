@@ -53,7 +53,7 @@ const App = () => {
   return (
     <div>
       <Login server={getServer() + "/api/token/"} setToken={setJWT} />
-      <Form server={getServer() + "/api/reflections/"} />
+      <Form server={getServer() + "/api/reflections/"} token={JWT} />
       <button type="button" onClick={onClickGet}>Send GET request</button>
       <div id="reflection-previews">{reflections}</div>
     </div>

@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import './form.css';
 
 const Form = (props) => {
-  const [values, setValues] = useState({ title: '', author: '', recipient: '', content: '' })
+  const [values, setValues] = useState({ title: '', recipient: '', content: '' })
 
   const handleSubmit = (event) => {
     const formData = new FormData();
     for (let key in values) {
       formData.append(key, values[key]);
     }
-    console.log(props.server);
-    console.log(formData);
 
-    fetch('http://127.0.0.1/api/reflections/', {
+    fetch(props.server, {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${props.token}`
+      },
       body: formData,
     })
     .then((response) => response.json())
@@ -34,9 +35,6 @@ const Form = (props) => {
     <form id="form" onSubmit={handleSubmit}>
       <label className="form-input">
         Title: <input type="text" name="title" onChange={handleChange} />
-      </label>
-      <label className="form-input">
-        Author: <input type="text" name="author" onChange={handleChange} />
       </label>
       <label className="form-input">
         Recipient: <input type="text" name="recipient" onChange={handleChange} />
