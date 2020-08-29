@@ -22,7 +22,7 @@ const App = () => {
 
   const getServer = () => {
     if (process.env.NODE_ENV === 'production') {
-        return 'https://openwhen.darrylforbes.me';
+        return 'https://happyappy.darrylforbes.me';
     }
     else {
         return 'http://127.0.0.1';
