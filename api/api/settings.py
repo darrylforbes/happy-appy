@@ -132,7 +132,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "http://localhost",
-    "https://openwhen.darrylforbes.me"
+    "https://happyappy.darrylforbes.me"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
