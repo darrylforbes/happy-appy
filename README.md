@@ -1,13 +1,11 @@
-Open When Dockerized
-
-    Version 2 of https://github.com/darrylforbes/open_when
+# Happy Appy
 
     Improvements
         - Dockerized
         - More organized cloud infrastruture
         - Better coding practices
 
-Planned Architecture
+## Planned Architecture
 
     EC2
         - Container 1: Django REST API served using Gunicorn
@@ -21,7 +19,7 @@ Planned Architecture
     S3
         - Production react app
 
-Other Plans
+## Other Plans
 
     Create CI/CD pipeline
 

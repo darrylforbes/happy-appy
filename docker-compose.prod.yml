@@ -25,8 +25,8 @@ services:
       context: ./nginx
       dockerfile: Dockerfile.prod
     environment:
-      - VIRTUAL_HOST=openwhen.darrylforbes.me
-      - LETSENCRYPT_HOST=openwhen.darrylforbes.me
+      - VIRTUAL_HOST=happyappy.darrylforbes.me
+      - LETSENCRYPT_HOST=happyappy.darrylforbes.me
     volumes:
       - ./api/static:/static
     networks:
