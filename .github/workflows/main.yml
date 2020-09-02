@@ -1,0 +1,41 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    
+    env:
+      SHA8: ${GITHUB_SHA::8}
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build the docker images
+        run: |
+          docker network create nginx-network
+          docker build --file api/Dockerfile --tag happy_appy_api:$SHA8 api
+          docker build --file frontend/Dockerfile.prod --tag happy_appy_frontend:$SHA8 frontend
+          docker build --file nginx/Dockerfile.prod --tag happy_appy_nginx:$SHA8 --network nginx-network --network default nginx
+
+  test:
+    needs: build
+
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          docker run --env SECRET_KEY=${{ secrets.SECRET_KEY }} --env DEBUG=0 --env DJANGO_ALLOWED_HOSTS=happyappy.darylforbes.me \
+          --env POSTGRES_USER=${{ secrets.POSTGRES_USER }} --env POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
+          --env POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} --env POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} api pytest
