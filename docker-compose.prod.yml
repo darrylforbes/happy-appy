@@ -2,19 +2,15 @@ version: "3.7"
 
 services:
   api:
-    build: ./api
+    image: docker.pkg.github.com/happy-appy/api
     env_file:
       - ./.env.prod
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
+    image: docker.pkg.github.com/happy-appy/frontend
 
   nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.prod
+    image: docker.pkg.github.com/happy-appy/nginx
     networks:
       - default
       - nginx-network
