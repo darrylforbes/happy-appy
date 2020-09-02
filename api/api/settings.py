@@ -27,9 +27,6 @@ DEBUG = int(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
-# Redirect location after api-auth/login
-LOGIN_REDIRECT_URL = os.environ.get("LOGIN_REDIRECT_URL")
-
 
 # Application definition
 
