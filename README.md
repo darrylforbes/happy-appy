@@ -26,3 +26,9 @@
     Possibly replace NGINX with Traefik once static files are relocated to S3
 
     Enable HTTPS with LetsEncrypt (possibly switch to Traefik for built in SSL)
+
+## Notes
+
+    Don't forget to run collect static and copy static files into nginx directory
+
+    Also need to run migrate

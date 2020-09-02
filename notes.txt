@@ -1,3 +1,0 @@
-Don't forget to run collectstatic and migrate
-
-Production react needs to delete volume before building
