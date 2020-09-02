@@ -14,24 +14,24 @@ jobs:
     runs-on: ubuntu-18.04
 
     env:
-      SHA8: ${GITHUB_SHA::8}
+      SHA7: ${GITHUB_SHA::7}
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Get SHA8
+      - name: Get SHA7
         id: vars
-        run: echo "::set-output name=SHA8::$(git rev-parse --short HEAD)"
+        run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
       - name: Build the docker images
         run: |
           docker network create nginx-network
           docker build --file api/Dockerfile \
-          --tag happy_appy_api:${{ steps.vars.outputs.SHA8 }} api
+          --tag happy_appy_api:${{ steps.vars.outputs.SHA7 }} api
           docker build --file frontend/Dockerfile.prod \
-          --tag happy_appy_frontend:${{ steps.vars.outputs.SHA8 }} frontend
+          --tag happy_appy_frontend:${{ steps.vars.outputs.SHA7 }} frontend
           docker build --file nginx/Dockerfile.prod \
-          --tag happy_appy_nginx:${{ steps.vars.outputs.SHA8 }} \
+          --tag happy_appy_nginx:${{ steps.vars.outputs.SHA7 }} \
           --network nginx-network --network default nginx
 
       #   test:
@@ -42,9 +42,9 @@ jobs:
       #     steps:
       #       - uses: actions/checkout@v2
 
-      #       - name: Get SHA8
+      #       - name: Get SHA7
       #         id: vars
-      #         run: echo "::set-output name=SHA8::$(git rev-parse --short HEAD)"
+      #         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
       - name: Run tests
         run: |
@@ -54,4 +54,4 @@ jobs:
           --env POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
           --env POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
           --env POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
-          happy_appy_api:${{ steps.vars.outputs.SHA8 }} pytest
+          happy_appy_api:${{ steps.vars.outputs.SHA7 }} pytest
