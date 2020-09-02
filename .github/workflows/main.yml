@@ -34,6 +34,15 @@ jobs:
           --tag $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }} \
           --network nginx-network --network default nginx
 
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push images
+        run: |
+          docker push $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
+          docker push $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }}
+          docker push $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }}
+
   test:
     needs: build
 
@@ -48,6 +57,9 @@ jobs:
       - name: Get SHA7
         id: vars
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Pull docker image
         run: docker pull $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
@@ -76,14 +88,14 @@ jobs:
         id: vars
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
       - name: Pull docker images
         run: |
           docker pull $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
           docker pull $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }}
           docker pull $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }}
-
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Tag images
         run: |
