@@ -10,7 +10,7 @@ on:
       - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-18.04
 
     env:
@@ -34,17 +34,17 @@ jobs:
           --tag happy_appy_nginx:${{ steps.vars.outputs.SHA8 }} \
           --network nginx-network --network default nginx
 
-  test:
-    needs: build
+      #   test:
+      #     needs: build
 
-    runs-on: ubuntu-18.04
+      #     runs-on: ubuntu-18.04
 
-    steps:
-      - uses: actions/checkout@v2
+      #     steps:
+      #       - uses: actions/checkout@v2
 
-      - name: Get SHA8
-        id: vars
-        run: echo "::set-output name=SHA8::$(git rev-parse --short HEAD)"
+      #       - name: Get SHA8
+      #         id: vars
+      #         run: echo "::set-output name=SHA8::$(git rev-parse --short HEAD)"
 
       - name: Run tests
         run: |
