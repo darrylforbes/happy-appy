@@ -10,7 +10,7 @@ on:
       - master
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-18.04
 
     env:
@@ -23,7 +23,7 @@ jobs:
         id: vars
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
-      - name: Build the docker images
+      - name: Build docker images
         run: |
           docker network create nginx-network
           docker build --file api/Dockerfile \
@@ -34,17 +34,23 @@ jobs:
           --tag $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }} \
           --network nginx-network --network default nginx
 
-      #   test:
-      #     needs: build
+  test:
+    needs: build
 
-      #     runs-on: ubuntu-18.04
+    runs-on: ubuntu-18.04
 
-      #     steps:
-      #       - uses: actions/checkout@v2
+    env:
+      REGISTRY_PATH: docker.pkg.github.com/${{ github.repository }}
 
-      #       - name: Get SHA7
-      #         id: vars
-      #         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get SHA7
+        id: vars
+        run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
+
+      - name: Pull docker image
+        run: docker pull $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
 
       - name: Run tests
         run: |
@@ -55,30 +61,41 @@ jobs:
           --env POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
           --env POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
           $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }} pytest
+  push:
+    needs: test
+
+    runs-on: ubuntu-18.04
+
+    env:
+      REGISTRY_PATH: docker.pkg.github.com/${{ github.repository }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get SHA7
+        id: vars
+        run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
+
+      - name: Pull docker images
+        run: |
+          docker pull $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
+          docker pull $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }}
+          docker pull $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }}
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
+      - name: Tag images
         run: |
-          # IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          docker tag $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }} \
+          $REGISTRY_PATH/api:latest
+          docker tag $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }} \
+          $REGISTRY_PATH/frontend:latest
+          docker tag $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }} \
+          $REGISTRY_PATH/nginx:latest
 
-          # Change all uppercase to lowercase
-          # IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          # Strip git ref prefix from version
-          # VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name
-          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          # [ "$VERSION" == "$default-branch" ] && VERSION=latest
-
-          # echo IMAGE_ID=$IMAGE_ID
-          # echo VERSION=$VERSION
-
-          # docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
-          docker push $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }}
-          docker push $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }}
+      - name: Push images
+        run: |
+          docker push $REGISTRY_PATH/api:latest
+          docker push $REGISTRY_PATH/frontend:latest
+          docker push $REGISTRY_PATH/nginx:latest
