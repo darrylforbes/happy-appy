@@ -1,17 +1,8 @@
-version: '3.7'
+version: "3.7"
 
 services:
-
   api:
     build: ./api
-    command: sh -c "
-      python manage.py migrate
-      && gunicorn api.wsgi:application --bind 0.0.0.0:8000
-      "
-    volumes:
-      - ./api:/usr/src/app
-    expose:
-      - 8000
     env_file:
       - ./.env.dev
     depends_on:

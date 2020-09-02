@@ -1,15 +1,8 @@
-version: '3.7'
+version: "3.7"
 
 services:
-
   api:
     build: ./api
-    command: sh -c "
-      python manage.py migrate
-      && gunicorn api.wsgi:application --bind 0.0.0.0:8000
-      "
-    expose:
-      - 8000
     env_file:
       - ./.env.prod
 
@@ -17,23 +10,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    expose:
-      - 80
 
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile.prod
-    environment:
-      - VIRTUAL_HOST=happyappy.darrylforbes.me
-      - LETSENCRYPT_HOST=happyappy.darrylforbes.me
-    volumes:
-      - ./api/static:/static
     networks:
       - default
       - nginx-network
-    expose:
-      - 80
     depends_on:
       - api
       - frontend

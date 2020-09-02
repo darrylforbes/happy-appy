@@ -5,8 +5,12 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+EXPOSE 8000
+
 RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . /usr/src/app/
+
+CMD sh -c "python manage.py migrate && gunicorn api.wsgi:application --bind 0.0.0.0:8000"

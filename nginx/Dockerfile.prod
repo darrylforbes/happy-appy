@@ -1,5 +1,10 @@
 FROM nginx:1.16-alpine
 
+ENV VIRTUAL_HOST happyappy.darrylforbes.me
+ENV LETSENCRYPT_HOST happyappy.darrylforbes.me
+
+EXPOSE 80
+
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx.prod.conf /etc/nginx/conf.d
 COPY ./static/ /static/
