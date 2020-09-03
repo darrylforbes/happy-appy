@@ -27,11 +27,11 @@ jobs:
         run: |
           docker network create nginx-network
           docker build --file api/Dockerfile \
-          --tag $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }} api
+          --tag $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }} api
           docker build --file frontend/Dockerfile.prod \
-          --tag $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }} frontend
+          --tag $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }} frontend
           docker build --file nginx/Dockerfile.prod \
-          --tag $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }} \
+          --tag $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }} \
           --network nginx-network --network default nginx
 
       - name: Log into registry
@@ -39,9 +39,9 @@ jobs:
 
       - name: Push images
         run: |
-          docker push $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
-          docker push $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }}
-          docker push $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }}
+          docker push $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
+          docker push $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }}
+          docker push $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }}
 
   test:
     needs: build
@@ -72,7 +72,7 @@ jobs:
           --env POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
           --env POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
           --env POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
-          $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }} pytest
+          $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }} pytest
   push:
     needs: test
 
@@ -93,21 +93,21 @@ jobs:
 
       - name: Pull docker images
         run: |
-          docker pull $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
-          docker pull $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }}
-          docker pull $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }}
+          docker pull $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
+          docker pull $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }}
+          docker pull $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }}
 
       - name: Tag images
         run: |
-          docker tag $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }} \
-          $REGISTRY_PATH/api:latest
-          docker tag $REGISTRY_PATH/frontend:${{ steps.vars.outputs.SHA7 }} \
-          $REGISTRY_PATH/frontend:latest
-          docker tag $REGISTRY_PATH/nginx:${{ steps.vars.outputs.SHA7 }} \
-          $REGISTRY_PATH/nginx:latest
+          docker tag $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }} \
+          $REGISTRY_PATH/happy-appy-api:latest
+          docker tag $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }} \
+          $REGISTRY_PATH/happy-appy-frontend:latest
+          docker tag $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }} \
+          $REGISTRY_PATH/happy-appy-nginx:latest
 
       - name: Push images
         run: |
-          docker push $REGISTRY_PATH/api:latest
-          docker push $REGISTRY_PATH/frontend:latest
-          docker push $REGISTRY_PATH/nginx:latest
+          docker push $REGISTRY_PATH/happy-appy-api:latest
+          docker push $REGISTRY_PATH/happy-appy-frontend:latest
+          docker push $REGISTRY_PATH/happy-appy-nginx:latest
