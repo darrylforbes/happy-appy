@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     env:
-      REGISTRY_PATH: docker.pkg.github.com/${{ github.repository }}
+      REGISTRY_PATH: ghcr.io/${{ github.repository }}
 
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
           --network nginx-network --network default nginx
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push images
         run: |
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     env:
-      REGISTRY_PATH: docker.pkg.github.com/${{ github.repository }}
+      REGISTRY_PATH: ghcr.io/${{ github.repository }}
 
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Pull docker image
         run: docker pull $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     env:
-      REGISTRY_PATH: docker.pkg.github.com/${{ github.repository }}
+      REGISTRY_PATH: ghcr.io/${{ github.repository }}
 
     steps:
       - uses: actions/checkout@v2
@@ -89,7 +89,7 @@ jobs:
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Pull docker images
         run: |
