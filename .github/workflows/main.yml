@@ -13,9 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-18.04
 
-    env:
-      REGISTRY_PATH: ghcr.io/${{ github.actor }}
-
     steps:
       - uses: actions/checkout@v2
 
@@ -27,29 +24,26 @@ jobs:
         run: |
           docker network create nginx-network
           docker build --file api/Dockerfile \
-          --tag $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }} api
+          --tag darrylforbes/happy-appy-api:${{ steps.vars.outputs.SHA7 }} api
           docker build --file frontend/Dockerfile.prod \
-          --tag $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }} frontend
+          --tag darrylforbes/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }} frontend
           docker build --file nginx/Dockerfile.prod \
-          --tag $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }} \
+          --tag darrylforbes/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }} \
           --network nginx-network --network default nginx
 
       - name: Log into registry
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Push images
         run: |
-          docker push $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
-          docker push $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }}
-          docker push $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }}
+          docker push darrylforbes/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
+          docker push darrylforbes/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }}
+          docker push darrylforbes/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }}
 
   test:
     needs: build
 
     runs-on: ubuntu-18.04
-
-    env:
-      REGISTRY_PATH: ghcr.io/${{ github.actor }}
 
     steps:
       - uses: actions/checkout@v2
@@ -59,10 +53,10 @@ jobs:
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
       - name: Log into registry
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Pull docker image
-        run: docker pull $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
+        run: docker pull darrylforbes/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
 
       - name: Run tests
         run: |
@@ -72,14 +66,11 @@ jobs:
           --env POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
           --env POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
           --env POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
-          $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }} pytest
+          darrylforbes/happy-appy-api:${{ steps.vars.outputs.SHA7 }} pytest
   push:
     needs: test
 
     runs-on: ubuntu-18.04
-
-    env:
-      REGISTRY_PATH: ghcr.io/${{ github.actor }}
 
     steps:
       - uses: actions/checkout@v2
@@ -89,25 +80,25 @@ jobs:
         run: echo "::set-output name=SHA7::$(git rev-parse --short HEAD)"
 
       - name: Log into registry
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Pull docker images
         run: |
-          docker pull $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
-          docker pull $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }}
-          docker pull $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }}
+          docker pull darrylforbes/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
+          docker pull darrylforbes/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }}
+          docker pull darrylforbes/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }}
 
       - name: Tag images
         run: |
-          docker tag $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }} \
-          $REGISTRY_PATH/happy-appy-api:latest
-          docker tag $REGISTRY_PATH/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }} \
-          $REGISTRY_PATH/happy-appy-frontend:latest
-          docker tag $REGISTRY_PATH/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }} \
-          $REGISTRY_PATH/happy-appy-nginx:latest
+          docker tag darrylforbes/happy-appy-api:${{ steps.vars.outputs.SHA7 }} \
+          darrylforbes/happy-appy-api:latest
+          docker tag darrylforbes/happy-appy-frontend:${{ steps.vars.outputs.SHA7 }} \
+          darrylforbes/happy-appy-frontend:latest
+          docker tag darrylforbes/happy-appy-nginx:${{ steps.vars.outputs.SHA7 }} \
+          darrylforbes/happy-appy-nginx:latest
 
       - name: Push images
         run: |
-          docker push $REGISTRY_PATH/happy-appy-api:latest
-          docker push $REGISTRY_PATH/happy-appy-frontend:latest
-          docker push $REGISTRY_PATH/happy-appy-nginx:latest
+          docker push darrylforbes/happy-appy-api:latest
+          docker push darrylforbes/happy-appy-frontend:latest
+          docker push darrylforbes/happy-appy-nginx:latest
