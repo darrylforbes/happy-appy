@@ -62,7 +62,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Pull docker image
-        run: docker pull $REGISTRY_PATH/api:${{ steps.vars.outputs.SHA7 }}
+        run: docker pull $REGISTRY_PATH/happy-appy-api:${{ steps.vars.outputs.SHA7 }}
 
       - name: Run tests
         run: |
