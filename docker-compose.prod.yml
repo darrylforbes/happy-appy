@@ -2,15 +2,15 @@ version: "3.7"
 
 services:
   api:
-    image: ghcr.io/happy-appy/happy-appy-api
+    image: ghcr.io/darrylforbes/happy-appy-api
     env_file:
       - ./.env.prod
 
   frontend:
-    image: ghcr.io/happy-appy/happy-appy-frontend
+    image: ghcr.io/darrylforbes/happy-appy-frontend
 
   nginx:
-    image: ghcr.io/happy-appy/happy-appy-nginx
+    image: ghcr.io/darrylforbes/happy-appy-nginx
     networks:
       - default
       - nginx-network
